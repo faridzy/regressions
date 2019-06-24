@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Simple Regression</title>
+</head>
+<body>
+
+
+<script type="text/javascript">
+	
+		const k = Math.random() * 100
+		const b = Math.random() * 100
+
+		const dataSet = Array.from({ length: 1000 }, _ => {
+		  const noise = Math.random() * 30
+		  const x = Math.random() * 10
+		  const y = k * x + b + noise * (Math.random() > 0.3 ? -1 : 1)
+		  return [x, y]
+		})
+		console.log('Dataset\n');
+		console.log(dataSet);
+
+		const trainingSet = dataSet.slice(0, dataSet.length * 0.7)
+		const testingSet = dataSet.slice(dataSet.length * 0.7)
+		console.log('Training Set\n');
+		console.log(trainingSet);
+		console.log('Testing Set');
+		console.log(testingSet);
+
+		const learningRate = 0.01
+		let iteration = 10000
+		let theta_0 = Math.random()
+		let theta_1 = Math.random()
+
+		const training = () => {
+		  let d_theta_0 = 0
+		  let d_theta_1 = 0
+
+		  for (let [x, y] of trainingSet) {
+		    const h = theta_0 + theta_1 * x
+		    const bias =  h - y
+		    d_theta_0 += bias * 1
+		    d_theta_1 += bias * x
+		  }
+
+		  theta_0 -= learningRate * d_theta_0 / trainingSet.length
+		  theta_1 -= learningRate * d_theta_1 / trainingSet.length
+		}
+
+		// training
+		while (iteration--) {
+		  training()
+		}
+
+		// test
+		let loss = 0
+		for (let [x, y] of testingSet) {
+		  loss += Math.pow(theta_0 + theta_1 * x - y, 2)
+		}
+		loss = loss / (testingSet.length * 2)
+
+		console.log('k:', k)
+		console.log('b:', b)
+		console.log('hypothesis:', `y = ${theta_1} * x + ${theta_0}`)
+		console.log('loss:', loss)
+</script>
+</body>
+</html>
